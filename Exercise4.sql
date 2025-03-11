@@ -78,6 +78,65 @@ WHERE ss.MOVIETITLE IS NULL
 --Part 2
 USE pc
 
+--Problem 1
+SELECT
+	p.maker,
+	p.model,
+	p.type
+FROM [product] AS p
+LEFT JOIN laptop AS l
+	ON p.model = l.model
+LEFT JOIN pc 
+	ON p.model = pc.model
+LEFT JOIN printer AS pr 
+	ON p.model = pr.model
+WHERE l.model IS NULL
+	AND pc.model IS NULL
+	AND pr.model IS NULL
+
+--Problem 2
+(
+	SELECT
+		p.maker
+	FROM product AS p
+	JOIN laptop AS l
+		ON p.model = l.model
+)
+INTERSECT
+(
+	SELECT
+		p.maker
+	FROM product AS p
+	JOIN printer AS pr
+		ON p.model = pr.model
+)
+
+--Problem 3
+SELECT
+	l1.hd
+FROM laptop AS l1
+JOIN laptop AS l2
+	ON l1.hd = l2.hd
+WHERE l1.code != l2.code
+
+--Problem 3 second way
+SELECT DISTINCT
+	l1.hd
+FROM laptop AS l1
+WHERE (
+	SELECT 
+		COUNT(*)
+	FROM laptop AS l2
+	WHERE l2.hd = l1.hd
+) > 1
+
+--Problem 4
+SELECT
+	*
+FROM pc
+LEFT JOIN product AS p
+	ON pc.model = p.model
+WHERE p.maker IS NULL
 
 --Part 3
 USE ships
