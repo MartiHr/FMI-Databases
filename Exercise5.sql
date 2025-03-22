@@ -130,3 +130,63 @@ GROUP BY p.maker
 USE ships
 
 --Problem 1
+SELECT
+	COUNT(c.TYPE) AS NO_Classes
+FROM CLASSES AS c
+WHERE c.TYPE = 'bb'
+
+--Problem 2
+SELECT
+	c.CLASS,
+	AVG(c.NUMGUNS) AS avgGuns
+FROM CLASSES AS c
+WHERE c.TYPE = 'bb'
+GROUP BY c.CLASS
+
+--Problem 3
+SELECT
+	AVG(c.NUMGUNS) AS avgGuns
+FROM CLASSES AS c
+WHERE c.TYPE = 'bb'
+
+--Problem 4
+SELECT
+	s.CLASS,
+	MIN(s.LAUNCHED) AS FirstYear,
+	MAX(s.LAUNCHED) AS LastYear
+FROM SHIPS AS s
+GROUP BY s.CLASS
+
+--Problem 5
+SELECT
+	s.CLASS,
+	COUNT(*) AS NumberOfSunk
+FROM SHIPS AS s
+JOIN OUTCOMES AS o
+	ON s.name = o.ship
+WHERE o.RESULT = 'sunk'
+GROUP BY s.CLASS
+
+--Problem 6
+SELECT
+	s.CLASS,
+	COUNT(*) AS NumberOfSunk
+FROM SHIPS AS s
+JOIN OUTCOMES AS o
+	ON s.name = o.ship
+WHERE o.RESULT = 'sunk'
+AND s.CLASS IN (
+	SELECT
+		s2.CLASS
+	FROM SHIPS AS s2
+	GROUP BY s2.CLASS
+	HAVING COUNT(s2.NAME) >= 2
+)
+GROUP BY s.CLASS
+
+--Problem 7
+SELECT 
+	c.COUNTRY,
+	CONVERT(DECIMAL(9,2), AVG(BORE)) AS AvgBore
+FROM CLASSES AS c
+GROUP BY c.COUNTRY
