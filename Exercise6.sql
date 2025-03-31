@@ -266,3 +266,111 @@ AND o1.BATTLE IN (
 
 --Part 3
 USE pc
+
+--Problem 1
+SELECT
+	l1.model
+FROM LAPTOP AS l1
+WHERE l1.screen = 15
+AND l1.model IN (
+	SELECT
+		l2.model
+	FROM LAPTOP AS l2
+	WHERE l2.screen = 11
+)
+
+--OR
+(
+	SELECT
+		l.model
+	FROM LAPTOP AS l
+	GROUP BY l.model, l.screen
+	HAVING l.screen = 11
+)
+INTERSECT
+(
+	SELECT
+		l.model
+	FROM LAPTOP AS l
+	GROUP BY l.model, l.screen
+	HAVING l.screen = 15
+)
+
+--Problem 2
+SELECT DISTINCT
+	pc.model
+FROM pc
+JOIN product AS p1
+	ON pc.model = p1.model
+WHERE pc.price < (
+	SELECT TOP(1)
+		l1.price
+	FROM LAPTOP AS l1
+	JOIN product AS p2
+		ON l1.model = p2.model
+	WHERE p2.maker = p1.maker
+	ORDER BY l1.price
+)
+
+--Problem 3
+SELECT
+	pc.model,
+	--p.maker,
+	CONVERT(decimal(9,2), AVG(pc.price)) AS AvgPrice
+FROM pc
+JOIN  product AS p
+	ON pc.model = p.model
+GROUP BY pc.model, p.maker
+HAVING AVG(pc.price) < (
+	SELECT TOP(1)
+		l2.price
+	FROM LAPTOP AS l2
+	JOIN product AS p2
+		ON l2.model = p2.model
+	WHERE p2.maker = p.maker
+	ORDER BY l2.price
+)
+
+--OR
+SELECT 
+	t.model,
+	t.maker,
+	t.AvgPrice
+FROM (
+	SELECT
+		pc.model,
+		p.maker,
+		CONVERT(decimal(9,2), AVG(pc.price)) AS AvgPrice
+	FROM pc
+	JOIN  product AS p
+		ON pc.model = p.model
+	GROUP BY pc.model, p.maker
+) AS t
+WHERE t.AvgPrice < (
+	SELECT TOP(1)
+		l.price
+	FROM LAPTOP AS l
+	JOIN product AS p
+		ON l.model = p.model
+	WHERE p.maker = t.maker
+	ORDER BY l.price
+)
+
+--Problem 4
+SELECT
+	pc.code,
+	p.maker,
+	pc.price,
+    (
+		SELECT 
+			COUNT(pc2.CODE)
+		FROM pc AS pc2 
+		WHERE pc2.PRICE >= pc.price
+		AND pc2.code != pc.code
+	) AS NumberOfPCsWithHigherPrice
+FROM pc
+JOIN product AS p
+	ON pc.model = p.model
+GROUP BY pc.code, p.maker, pc.price
+--ORDER BY pc.price DESC to check that this is actually correct
+--although in the file the answer is other
