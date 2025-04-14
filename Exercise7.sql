@@ -57,6 +57,27 @@ WHERE model IN (
 	AND	p.maker = 'B'
 )
 
+--Part 3
+USE ships
 
+--Problem 10
+INSERT INTO SHIPS(NAME, CLASS, LAUNCHED) VALUES
+('Nelson', 'Nelson', 1927),
+('Rodney', 'Nelson', 1927)
 
+INSERT INTO CLASSES (NUMGUNS, BORE, DISPLACEMENT, CLASS, TYPE, COUNTRY)
+VALUES (9, 16, 34000, 'Nelson', 'bb', 'Gt.Britain')
 
+--Problem 11
+DELETE FROM SHIPS
+WHERE NAME IN (
+	SELECT
+		o.SHIP
+	FROM OUTCOMES AS o
+	WHERE o.RESULT = 'sunk'
+)
+
+--Problem 12
+UPDATE CLASSES
+	SET BORE *= 2.5,
+		DISPLACEMENT -= DISPLACEMENT / 11
