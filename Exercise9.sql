@@ -1,0 +1,66 @@
+--Part 1
+CREATE DATABASE Flights
+
+USE Flights
+
+CREATE TABLE Airline (
+	Code INT PRIMARY KEY,
+	Name NVARCHAR(100) NOT NULL UNIQUE,
+	Country NVARCHAR(100) NOT NULL
+)
+
+CREATE TABLE Airport (
+	Code INT PRIMARY KEY,
+	Name NVARCHAR(100) NOT NULL,
+	Country NVARCHAR(100) NOT NULL,
+	City NVARCHAR(255) NOT NULL,
+	UNIQUE (Name, Country)
+)
+
+CREATE TABLE Airplane (
+	Code INT PRIMARY KEY,
+	Type NVARCHAR(100) NOT NULL,
+	SeatsCount INT NOT NULL CHECK (SeatsCount > 0),
+	ManufacturingDate DATETIME2 NOT NULL
+)
+
+CREATE TABLE Flight (
+	FNumber INT PRIMARY KEY,
+	AirlineOperator INT NOT NULL FOREIGN KEY REFERENCES Airline(Code),
+	DepartureAirport INT NOT NULL FOREIGN KEY REFERENCES Airport(Code),
+	ArrivalAirport INT NOT NULL FOREIGN KEY REFERENCES Airport(Code),
+	FlightTime DATETIME2 NOT NULL,
+	FlightDuration BIGINT NOT NULL CHECK (FlightDuration > 0),
+	Airplane INT NOT NULL FOREIGN KEY REFERENCES Airplane(Code)
+)
+
+CREATE TABLE Customer (
+	Id INT PRIMARY KEY,
+	FirstName NVARCHAR(100) NOT NULL,
+	LastName NVARCHAR(100) NOT NULL,
+	Email NVARCHAR(100) NOT NULL,
+	CHECK (
+		Email LIKE '%@%.%' AND LEN(Email) >= 6
+	)
+)
+
+CREATE TABLE Agency (
+	Name NVARCHAR(100) PRIMARY KEY,
+	Country NVARCHAR(100) NOT NULL,
+	City NVARCHAR(100) NOT NULL,
+	Phone NVARCHAR(30) NOT NULL
+)
+
+CREATE TABLE Booking (
+	Code INT PRIMARY KEY,
+	AgencyName NVARCHAR(100) NOT NULL FOREIGN KEY REFERENCES Agency(Name),
+	AirlineCode INT NOT NULL FOREIGN KEY REFERENCES Airline(Code),
+	FlightNumber INT NOT NULL FOREIGN KEY REFERENCES Flight(FNumber),
+	CustomerId INT NOT NULL FOREIGN KEY REFERENCES Customer(Id),
+	BookingDate DATETIME2 NOT NULL,
+	FlightDate DATETIME2 NOT NULL,
+	Price INT NOT NULL CHECK (Price >= 0),
+	Status NVARCHAR(100) NOT NULL,
+	CHECK (Status IN ('Confirmed', 'Unconfirmed')),
+	CHECK (FlightDate >= BookingDate)
+)
