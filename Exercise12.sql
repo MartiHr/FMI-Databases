@@ -79,3 +79,20 @@ FROM Product AS p
 JOIN OrderLine AS ol
 		ON p.ProductId = ol.ProductId
 GROUP BY p.ProductId, p.ProductDescription
+
+--Problem 3
+SELECT
+	p.ProductId,
+	p.ProductDescription,
+	SUM(ol.OrderedQuantity) AS orderedCount
+FROM Product AS p
+LEFT JOIN OrderLine AS ol
+		ON p.ProductId = ol.ProductId
+GROUP BY p.ProductId, p.ProductDescription
+
+--Problem 4
+SELECT
+	*
+FROM Product AS p
+JOIN OrderLine AS ol
+		ON p.ProductId = ol.ProductId
