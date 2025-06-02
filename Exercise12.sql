@@ -103,3 +103,34 @@ JOIN OrderLine AS ol
 JOIN Product AS p
 	ON ol.ProductId = p.ProductId
 GROUP BY c.CustomerName
+
+--Part 2
+USE pc
+
+--Problem 5
+SELECT DISTINCT
+	p.maker
+FROM product AS p
+JOIN laptop AS l
+	ON p.model = l.model
+WHERE p.maker IN (
+	SELECT DISTINCT
+		p.maker
+	FROM product AS p
+	JOIN printer AS pr
+		ON p.model = pr.model
+)
+
+SELECT DISTINCT
+	p.maker
+FROM product AS p
+JOIN laptop AS l
+	ON p.model = l.model
+INTERSECT
+SELECT DISTINCT
+	p.maker
+FROM product AS p
+JOIN printer AS pr
+	ON p.model = pr.model
+
+
