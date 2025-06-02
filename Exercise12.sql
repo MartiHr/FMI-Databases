@@ -230,6 +230,19 @@ WHERE OUTCOMES.BATTLE IN (
     HAVING COUNT(SHIP) = 1
 )
 
+--Problem 10
+--INSERT INTO outcomes VALUES ('Missouri','Surigao Strait', 'sunk'),
+--('Missouri','North Cape', 'sunk'),
+--('Missouri','North Atlantic', 'ok');
+
+DELETE FROM Outcomes
+WHERE Outcomes.SHIP IN (
+	SELECT OUTCOMES.SHIP
+    FROM OUTCOMES
+    WHERE result='sunk'
+    GROUP BY OUTCOMES.SHIP
+    HAVING COUNT(RESULT) = 2
+)
 
 
-
+--Problem 11
