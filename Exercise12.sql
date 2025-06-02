@@ -6,9 +6,9 @@ USE FurnitureCompany
 
 CREATE TABLE Customer (
 	CustomerId INT PRIMARY KEY IDENTITY,
-	CustomerName VARCHAR(30) NOT NULL,
-	CustomerAddress VARCHAR(50) NOT NULL,
-	CustomerCity VARCHAR(50) NOT NULL,
+	CustomerName NVARCHAR(30) NOT NULL,
+	CustomerAddress NVARCHAR(50) NOT NULL,
+	CustomerCity NVARCHAR(50) NOT NULL,
 	CityCode INT NOT NULL
 );
 
@@ -20,9 +20,9 @@ CREATE TABLE [Order] (
 
 CREATE TABLE [Product] (
 	ProductId INT PRIMARY KEY,
-	ProductDescription VARCHAR(200),
-	ProductFinish VARCHAR(50) CHECK(ProductFinish IN ('череша', 'естествен ясен', 'бял ясен',
-		'червен дъб', 'естествен дъб', 'орех')) NOT NULL,
+	ProductDescription NVARCHAR(200),
+	ProductFinish NVARCHAR(50) CHECK(ProductFinish IN (N'череша', N'естествен ясен', N'бял ясен',
+		N'червен дъб', N'естествен дъб', N'орех')) NOT NULL,
 	StandardPrice DECIMAL(9, 2) NOT NULL,
 	ProductLineId INT NOT NULL
 )
@@ -35,18 +35,18 @@ CREATE TABLE OrderLine (
 )
 
 INSERT INTO Customer VALUES
-('Иван Петров', 'ул. Лавеле 8', 'София', '1000'),
-('Камелия Янева', 'ул. Иван Шишман 3', 'Бургас', '8000'),
-('Васил Димитров', 'ул. Абаджийска 87', 'Пловдив', '4000'),
-('Ани Милева', 'бул. Владислав Варненчик 56', 'Варна','9000');
+(N'Иван Петров', N'ул. Лавеле 8', N'София', N'1000'),
+(N'Камелия Янева', N'ул. Иван Шишман 3', N'Бургас', N'8000'),
+(N'Васил Димитров', N'ул. Абаджийска 87', 'Пловдив', '4000'),
+(N'Ани Милева', N'бул. Владислав Варненчик 56', N'Варна',N'9000');
 
 INSERT INTO Product VALUES
-(1000, 'офис бюро', 'череша', 195, 10),
-(1001, 'директорско бюро', 'червен дъб', 250, 10),
-(2000, 'офис стол', 'череша', 75, 20),
-(2001, 'директорски стол', 'естествен дъб', 129, 20),
-(3000, 'етажерка за книги', 'естествен ясен', 85, 30),
-(4000, 'настолна лампа', 'естествен ясен', 35, 40);
+(1000, N'офис бюро', N'череша', 195, 10),
+(1001, N'директорско бюро', N'червен дъб', 250, 10),
+(2000, N'офис стол', N'череша', 75, 20),
+(2001, N'директорски стол', N'естествен дъб', 129, 20),
+(3000, N'етажерка за книги', N'естествен ясен', 85, 30),
+(4000, N'настолна лампа', N'естествен ясен', 35, 40);
 
 INSERT INTO [Order] VALUES
 (100, '2013-01-05', 1),
@@ -74,4 +74,7 @@ INSERT INTO OrderLine VALUES
 --Problem 2
 SELECT
 	*
-FROM Product
+FROM Product AS p
+WHERE p.ProductFinish = N'череша'
+
+DROP DATABASE FurnitureCompany
