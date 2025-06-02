@@ -289,12 +289,14 @@ FROM CLASSES LEFT JOIN SHIPS
 CREATE VIEW ships_battles AS
 SELECT DISTINCT 
 	SHIPS.NAME as ship
-FROM SHIPS JOIN OUTCOMES
+FROM SHIPS 
+JOIN OUTCOMES
 	ON SHIPS.NAME = OUTCOMES.SHIP
 
 SELECT 
 	country, 
 	COUNT(ships_battles.ship)
-FROM countries_ships LEFT JOIN ships_battles
+FROM countries_ships 
+LEFT JOIN ships_battles
 	ON countries_ships.ship = ships_battles.ship
 GROUP BY country
