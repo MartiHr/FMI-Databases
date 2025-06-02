@@ -244,5 +244,57 @@ WHERE Outcomes.SHIP IN (
     HAVING COUNT(RESULT) = 2
 )
 
-
 --Problem 11
+CREATE VIEW battle_countries AS
+SELECT DISTINCT
+	OUTCOMES.BATTLE as battle, 
+	CLASSES.COUNTRY as country
+FROM OUTCOMES 
+JOIN SHIPS
+    ON OUTCOMES.SHIP = SHIPS.NAME
+JOIN CLASSES
+    ON CLASSES.CLASS = SHIPS.CLASS
+ORDER BY battle
+
+SELECT bc1.battle
+FROM battle_countries bc1
+GROUP BY bc1.battle
+HAVING 
+    -- Броят на страните в дадена битка трябва да е равен на броя на страните в битката при Guadalcanal
+    COUNT(*) = (
+        SELECT COUNT(DISTINCT country)
+        FROM battle_countries
+        WHERE battle = 'Guadalcanal'
+    )
+    AND
+    -- Нито една страна от битката при Guadalcanal не трябва да липсва в текущата битка
+    NOT EXISTS (
+        SELECT country
+        FROM battle_countries
+        WHERE battle = 'Guadalcanal'
+        EXCEPT
+        SELECT country
+        FROM battle_countries bc2
+        WHERE bc2.battle = bc1.battle
+    );
+
+--Problem 12 
+CREATE VIEW countries_ships AS
+SELECT DISTINCT 
+	CLASSES.COUNTRY as country, 
+	SHIPS.NAME as ship
+FROM CLASSES LEFT JOIN SHIPS
+	ON CLASSES.CLASS = SHIPS.CLASS
+
+CREATE VIEW ships_battles AS
+SELECT DISTINCT 
+	SHIPS.NAME as ship
+FROM SHIPS JOIN OUTCOMES
+	ON SHIPS.NAME = OUTCOMES.SHIP
+
+SELECT 
+	country, 
+	COUNT(ships_battles.ship)
+FROM countries_ships LEFT JOIN ships_battles
+	ON countries_ships.ship = ships_battles.ship
+GROUP BY country
