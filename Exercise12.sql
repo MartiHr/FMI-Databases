@@ -136,8 +136,9 @@ JOIN printer AS pr
 --Problem 6
 UPDATE pc
 SET price = price * 0.95
-WHERE model IN (
-    SELECT p.model
+WHERE pc.model IN (
+    SELECT 
+		p.model
     FROM product AS p
     JOIN (
         SELECT 
@@ -150,4 +151,14 @@ WHERE model IN (
     ) AS rich_makers 
 		ON p.maker = rich_makers.maker
 );
+
+--Problem 7
+SELECT
+	pc.hd,
+	MIN(pc.price) AS leastExpensive
+FROM pc
+WHERE pc.hd >= 10 
+	AND pc.hd <= 30
+GROUP BY pc.hd
+
 
