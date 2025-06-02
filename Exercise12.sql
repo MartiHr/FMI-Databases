@@ -72,3 +72,6 @@ INSERT INTO OrderLine VALUES
 
 
 --Problem 2
+SELECT
+	*
+FROM Product
