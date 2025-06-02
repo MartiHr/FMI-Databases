@@ -70,11 +70,12 @@ INSERT INTO OrderLine VALUES
 (105, 4000, 1),
 (107, 4000, 1);
 
-
 --Problem 2
 SELECT
-	*
+	p.ProductId,
+	p.ProductDescription,
+	COUNT(p.ProductId) AS productCount
 FROM Product AS p
-WHERE p.ProductFinish = N'череша'
-
-DROP DATABASE FurnitureCompany
+JOIN OrderLine AS ol
+		ON p.ProductId = ol.ProductId
+GROUP BY p.ProductId, p.ProductDescription
