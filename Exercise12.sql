@@ -4,6 +4,7 @@ CREATE DATABASE FurnitureCompany
 
 USE FurnitureCompany
 
+--Part 1
 CREATE TABLE Customer (
 	CustomerId INT PRIMARY KEY IDENTITY,
 	CustomerName NVARCHAR(30) NOT NULL,
@@ -92,7 +93,13 @@ GROUP BY p.ProductId, p.ProductDescription
 
 --Problem 4
 SELECT
-	*
-FROM Product AS p
+	c.CustomerName,
+	SUM(ol.OrderedQuantity * p.StandardPrice) AS TotalMoneySpent
+FROM Customer AS c
+JOIN [Order] AS o
+	ON c.CustomerId = o.CustomerId
 JOIN OrderLine AS ol
-		ON p.ProductId = ol.ProductId
+	ON o.OrderId = ol.OrderId
+JOIN Product AS p
+	ON ol.ProductId = p.ProductId
+GROUP BY c.CustomerName
