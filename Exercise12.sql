@@ -133,4 +133,21 @@ FROM product AS p
 JOIN printer AS pr
 	ON p.model = pr.model
 
+--Problem 6
+UPDATE pc
+SET price = price * 0.95
+WHERE model IN (
+    SELECT p.model
+    FROM product AS p
+    JOIN (
+        SELECT 
+			maker
+        FROM product AS p2
+        JOIN printer AS pr 
+			ON p2.model = pr.model
+        GROUP BY p2.maker
+        HAVING AVG(pr.price) > 200 --Should be 800 but then no results
+    ) AS rich_makers 
+		ON p.maker = rich_makers.maker
+);
 
